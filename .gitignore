@@ -127,3 +127,46 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+try:
+  data_file = open("UD.txt", "r")
+  line_list=[]
+  userName_list=[line_list[0].split(',') for i in data_file if i[0:3] !='USE']
+  password_list=[line_list[1].rstrip() for i in data_file if i[0:3] !='PAS' ]#remove spaces
+  
+
+except FileNotFoundError as e:
+  print(e)
+
+  
+else:
+  #To chceck the correct input,
+  while True:#while not False
+    print("Login or create a new user? Select L to login, select C to create new user.")
+    choice =input()
+    if choice=="L":
+      print("Please enter your user name and hit enter: ")
+    elif choice=="C":
+      username=input("Please enter your first name, last name, and student ID, separated by a space:\n")
+      if username in userName_list:
+        userNameindex=userName_list.index(username)#the positio of user name
+        password=input("Enter password:\n")
+        if password_list[userNameindex]==password:
+          print("you are logged in")
+      else:
+        print('Wrong password')
+    else:
+      print("User not found")
+  
+firstName, lastName, id = input("").split()
+username=firstName[0].lower()+lastName[:2].lower()+id[:3]
+  while True:
+    print("Please enter password")
+    password=input()
+    print("Please reenter password:")
+    rePassword=input()
+    if(password==rePassword):
+      break
+    userName_list.append(username)
+    password_list.append(password)
+    print('User Created')
