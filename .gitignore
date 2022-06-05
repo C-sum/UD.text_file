@@ -1,172 +1,79 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-pip-wheel-metadata/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
-
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
-
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-
-# Translations
-*.mo
-*.pot
-
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-.python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-try:
-  data_file = open("UD.txt", "r")
-  line_list=[]
-  userName_list=[line_list[0].split(',') for i in data_file if i[0:3] !='USE']
-  password_list=[line_list[1].rstrip() for i in data_file if i[0:3] !='PAS' ]#remove spaces
+class UserData:
+    def __init__(self, firstname, lastname, username, password):
+        self.firstname = firstname
+        self.lastname = lastname
+        self.username = username
+        self.password = password
+    def get_firstname(self):
+        return self.firstname
+    def get_lastname(self):
+        return self.lastname
+    def get_username(self):
+        return self.username
+    def get_password(self):
+        return self.password
+    def set_firstname(self, firstname):
+        self.firstname = firstname
+    def set_lastname(self, lastname):
+        self.lastname = lastname
+    def set_username(self, username):
+        self.username = username
+    def set_password(self, password):
+        self.password = password
+    def __str__(self):
+        return "Firstname: " + self.firstname + "\nLastname: " + self.lastname + "\nUsername: " + self.username + "\nPassword: " + self.password
+def menu():
+    print('A: Search by last name')
+    print('B: Search by username')
+    print('C: Insert a user')
+    print('E: Display all users')
+    choice = input("Enter your choice: ")
+    return choice 
+    
+ def main():
+    datafile = open("UD (2).txt", "r")#open the file
+    userdata_list=[]#create an empty list
+    lines = datafile.readlines()
+    lines = lines[1:]#skip the header
+    for line in lines:
+      line = line.strip()
+      line = line.split(',')
+      userdata_list.append(UserData(line[0],line[1],line[2],line[3]))
+      print(line)
+      
+    datafile.close()
   
+    while True:
+      print()
+      choice=menu()
+      print()
+      if choice == 'A':
+          lastname=input("Enter user’s name in the form: Lastname \n")
+          for userdata in userdata_list:
+              if userdata.get_lastname() == lastname:
+                  print(userdata.get_password())
+                  break
+          else:
+              print("User not found")
 
-except FileNotFoundError as e:
-  print(e)
+      elif choice == 'B':
+          username=input("Enter user's username: ")
+          for userdata in userdata_list:#if user is found display the user’s password, and return the user to main menu
+              if userdata.get_username() == username:
+                  print(userdata.get_password())
+                  break
+          else:
+              print("User not found")
+              
+      elif choice == 'C':
+          infor=input("Enter user info in the following format: First name, last name, username, passworwor: \n")
+          datafile = open("UD (2).txt", "a")
+          datafile.write(f'{infor}\n')
+          datafile.close()#close the file
+        
+      elif choice == 'E':#else choice is E display all user's data fields
+          for userdata in userdata_list:
+              print(userdata)
 
-  
-else:
-  #To chceck the correct input,
-  while True:#while not False
-    print("Login or create a new user? Select L to login, select C to create new user.")
-    choice =input()
-    if choice=="L":
-      print("Please enter your user name and hit enter: ")
-    elif choice=="C":
-      username=input("Please enter your first name, last name, and student ID, separated by a space:\n")
-      if username in userName_list:
-        userNameindex=userName_list.index(username)#the positio of user name
-        password=input("Enter password:\n")
-        if password_list[userNameindex]==password:
-          print("you are logged in")
-      else:
-        print('Wrong password')
-    else:
-      print("User not found")
-  
-firstName, lastName, id = input("").split()
-username=firstName[0].lower()+lastName[:2].lower()+id[:3]
-  while True:
-    print("Please enter password")
-    password=input()
-    print("Please reenter password:")
-    rePassword=input()
-    if(password==rePassword):
-      break
-    userName_list.append(username)
-    password_list.append(password)
-    print('User Created')
+if __name__ == '__main__':
+  main()
